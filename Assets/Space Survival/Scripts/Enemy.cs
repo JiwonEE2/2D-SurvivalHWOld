@@ -59,15 +59,21 @@ public class Enemy : MonoBehaviour
 		Destroy(gameObject);
 	}
 
-	public float damageInterval;    // 데미지 간격
-	private float preDamageTime;		// 이전에 데미지를 준 시간(Time.time)
+	public float damageInterval = 1000f;    // 데미지 간격
+	private float preDamageTime = 0;    // 이전에 데미지를 준 시간(Time.time)
 
 	private void OnCollisionStay2D(Collision2D collision)
 	{
 		// 플레이어에게 데미지 주는 간격 조정하기
 		if (collision.collider.CompareTag("Player"))
 		{
-			collision.collider.GetComponent<Player>().TakeDamage(damage);
+			preDamageTime += Time.deltaTime;
+			print(preDamageTime);
+			if (damageInterval <= preDamageTime)
+			{
+				collision.collider.GetComponent<Player>().TakeDamage(damage);
+				preDamageTime = 0;
+			}
 		}
 	}
 }
